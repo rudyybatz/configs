@@ -1,0 +1,4 @@
+gnome-base/nautilus -previewer
+dev-libs/libdbusmenu gtk3 -gtk
+dev-libs/gjs -sysprof
+x11-wm/mutter -sysprof

@@ -1,0 +1,162 @@
+# Installing Gentoo Linux.
+
+# Enable WiFi.
+1. net-setup wlo1 if using Gentoo Linux live image or Use networkmanager if using another distribution live image.
+
+
+# Partition Disks and Create filesystems.
+1. cfdisk /dev/sda
+2. mkswap /dev/sda1
+3. swapon /dev/sda1
+4. mkfs.ext4 /dev/sda2
+
+
+# Mounting the root partition
+1. mkdir --parents /mnt/gentoo (if using another linux distribution live image)
+2. mount /dev/sda2 /mnt/gentoo
+
+
+# Choosing a stage file.
+1. cd /mnt/gentoo
+2. date 03 25 1300 2024 (Month, Day, Hour, Minute and Year) or timedatectl set-timezone America/Los_Angeles (if using another linux distribution live image)
+
+
+# Download openrc stage3 or systemd stage3 tarball.
+1. links https://www.gentoo.org/downloads/mirrors/ or use wget and download tarball
+2. wget https://github.com/rudybatzz/configs/archive/refs/heads/main.zip
+
+
+# Installing a stage file.
+1. tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner -C /mnt/gentoo
+
+
+# Configuring compile options
+1. nano /mnt/gentoo/etc/portage/make.conf
+
+
+# RUSTFLAGS (Add to /etc/portage/make.conf)
+1. RUSTFLAGS="${RUSTFLAGS} -C target-cpu=native"
+
+
+# Chrooting.
+1. cp --dereference /etc/resolv.conf /mnt/gentoo/etc/  (Copy DNS info)
+
+
+# Mounting the necessary filesystems.
+1. mount --types proc /proc /mnt/gentoo/proc
+2. mount --rbind /sys /mnt/gentoo/sys
+3. mount --make-rslave /mnt/gentoo/sys
+4. mount --rbind /dev /mnt/gentoo/dev
+5. mount --make-rslave /mnt/gentoo/dev
+6. mount --bind /run /mnt/gentoo/run
+7. mount --make-slave /mnt/gentoo/run
+8. arch-chroot /mnt/gentoo (if using Gentoo's live image)
+
+
+# Entering the new environment.
+1. chroot /mnt/gentoo /bin/bash
+2. source /etc/profile
+3. export PS1="(chroot) ${PS1}"
+
+
+# Configuring Portage. (After unzipping main.zip and following below steps) 
+1. emerge-webrsync
+
+
+# Choosing the right profile.
+1. eselect profile list
+2. eselect profile set (choose preferred profile) or eselect profile list | less
+
+
+# Unzip main.zip
+1. delete /etc/portage/make.conf , /etc/portage/binrepos.conf/gentoobinhost.conf , /etc/portage/package.use , and /etc/fstab
+2. Move Files/Folders to proper location.
+3. move doas.conf to /etc
+4. chown -c root:root /etc/doas.conf afterwards do chmod -c 0400 /etc/doas.conf
+
+
+# Install optional applications.
+1. emerge -av app-admin/doas
+2. emerge -av1 dev-lang/rust-bin 
+3. emerge -avg1 llvm-core/llvm  (binary package)
+4. emerge -avg1 dev-build/cmake  (binary package)
+5. emerge -avg1 sys-devel/gcc   (binary package only if theres an update during install)
+6. emerge -av --quiet-build=y linux-firmware gentoo-kernel-bin
+
+
+#  Set timezone. (OpenRC or systemd)
+1. ln -sf ../usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+
+# Locale generation.
+1. nano /etc/locale.gen (uncomment en_US.UTF-8 UTF-8)
+2. locale-gen
+3. eselect locale set 4
+4. env-update && source /etc/profile && export PS1="(chroot) ${PS1}" (reload environment)
+
+
+# Configuring the system.
+1. nano /etc/fstab ( if forgotten previous step of deleting fstab and replacing)
+
+
+# Hostname. (OpenRC or systemd)
+1. echo tux > /etc/hostname
+2. nano /etc/conf.d/hostname and change localhost to your hostname (OpenRC only)
+
+
+# System information.
+1. passwd 
+2. (systemd only and during install only)
+3. systemd-machine-id-setup
+4. systemd-firstboot --prompt
+5. systemctl preset-all --preset-mode=enable-only
+6. systemctl preset-all
+
+
+# Time synchronization.
+1. systemctl enable systemd-timesyncd.service (systemd only)
+
+
+# Configuring GRUB.
+1. grub-install /dev/sda
+2. nano /etc/default/grub (add quiet to GRUB_CMDLINE_LINUX_DEFAULT)
+3. chmod -x /etc/grub.d/30_os-prober 30_uefi-firmware
+4. grub-mkconfig -o /boot/grub/grub.cfg
+
+
+# Update @world.
+1. emerge --ask --verbose --update --deep --newuse --quiet-build=y @world
+
+
+# Final steps.
+1. emerge -av --quiet-build=y net-misc/networkmanager
+2. rc-update add NetworkManager default or if using systemd systemctl enable NetworkManager 
+3. useradd -m -G users,wheel,video -s /bin/bash rudy
+4. passwd rudy
+
+
+# Extra Step (OpenRC Only)
+1. clear >> /etc/issue
+2. Open /etc/issue and move escape sequence from the very bottom of file and move it to the top to be first line.
+
+
+# Rebooting system.
+1. exit
+2. cd
+3. umount -l /mnt/gentoo/dev{/shm,/pts,}
+4. umount -R /mnt/gentoo
+5. reboot 
+
+
+# Rebooted into new system
+1. nmtui  (Choose your WiFi and enter your password)
+
+
+
+# xfce install (Optional)
+1. emerge -av --quiet-build=y x11-base/xorg-server
+2. env-update and then source /etc/profile 
+3. emerge -av1 --quiet-build=y xfce-extra/xfce4-notifyd
+4. emerge -av --quiet-build=y xfce-base/xfce4-meta
+5. reboot and Log in as normal user
+6. create file .xinitrc and add exec startxfce4 then save and quit and after use startx command

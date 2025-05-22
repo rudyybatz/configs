@@ -1,0 +1,4 @@
+kde-plasma/plasma-meta -crash-handler -firewall -kwallet -crypt -smart
+dev-qt/qtbase cups gtk
+app-text/ghostscript-gpl cups gtk
+dev-qt/qtwidgets gtk

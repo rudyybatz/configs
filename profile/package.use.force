@@ -1,0 +1,1 @@
+sys-devel/llvm LLVM_TARGETS: X86 AMDGPU -LoongArch -BPF -AArch64 -ARM -AVR -Hexagon -Lanai -MSP430 -Mips -NVPTX -PowerPC -RISCV -Sparc -SystemZ -WebAssembly -XCore -VE

@@ -1,0 +1,5 @@
+#. Installing a few binary packages before installing GNOME (OpenRC or systemd)
+1. doas emerge -avg1 --quiet-build dev-build/cmake dev-lang/spidermonkey app-i18n/ibus dev-util/spirv-tools
+
+#. Prevent webkit-gtk
+2. add -gnome-online-accounts to /etc/portage/make.conf

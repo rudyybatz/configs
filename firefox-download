@@ -1,0 +1,4 @@
+#To Dowload Firefox Nightly using wget
+
+wget -o  firefox.tar.bz2 'https://download.mozilla.org/?product=firefox-nightly-latest-ssl&os=linux64&lang=en-US'
+

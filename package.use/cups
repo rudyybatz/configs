@@ -1,0 +1,9 @@
+# System related
+x11-libs/gtk+ -cups
+
+# Minecraft related
+net-print/cups -X -usb
+net-print/cups-filters -postscript
+app-text/poppler -boost
+
+
