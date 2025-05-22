@@ -23,7 +23,7 @@
 
 # Download openrc stage3 or systemd stage3 tarball.
 1. links https://www.gentoo.org/downloads/mirrors/ or use wget and download tarball
-2. wget https://github.com/rudybatzz/configs/archive/refs/heads/main.zip
+2. wget https://github.com/rudyybatz/configs/archive/refs/heads/main.zip
 
 
 # Installing a stage file.
