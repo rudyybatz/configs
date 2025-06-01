@@ -1,0 +1,2 @@
+mate-base/mate base -themes -extras -help
+dev-libs/libdbusmenu gtk3 -gtk
