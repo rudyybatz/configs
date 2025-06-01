@@ -16,4 +16,4 @@
 # <fs>			<mountpoint>	<type>		<opts>		<dump> <pass>
 
 /dev/sda1               none            swap            sw              0 0
-/dev/sda2               /               ext4            noatime         0 1
+/dev/sda2               /               ext4            defaults,noatime         0 1
