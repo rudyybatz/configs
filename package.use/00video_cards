@@ -1,1 +1,1 @@
-*/* VIDEO_CARDS: amdgpu radeon r600
+*/* VIDEO_CARDS: amdgpu radeon r600 -intel -nouveau -radeonsi
